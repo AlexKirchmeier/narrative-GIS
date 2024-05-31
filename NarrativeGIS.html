@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Narrative GIS</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- plugin css -->
+    <link rel="stylesheet" href="leaflet.locationlist.css"/>
+    <style>
+        body {font-family: Helvetica;}
+    </style>
+</head>
+<body>
+    <!-- <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script> -->
+    <!-- plugin js -->
+    <script src="leaflet.locationlist.js"></script>
+    <h1>Northwest Tea Festival 2023: Alex's Itinerary, 9/24</h1>
+    <script src = "narrative.geojson"></script>
+    <div style="width: 100%;">
+        <div id="mapid" style="width: 70%; height: 400px; float: left; border: solid black 2px"></div>
+        <script>
+            var mymap = L.map('mapid').setView([47.660437, -122.314039], 18);
+
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+            }).addTo(mymap);
+
+            // using the location list plugin
+            var llist = L.control.locationlist({locationsList: [
+                {title: 'Action 1: U District Light Rail', latlng: [47.660437, -122.314039], zoom: 18},
+                {title: 'Action 2: Westlake Center Station', latlng: [47.611772, -122.336460], zoom: 18},
+                {title: 'Action 3: Seattle Center Monorail', latlng: [47.621362, -122.349750], zoom: 19},
+                {title: 'Action 4: Seattle Center Exhibition Hall', latlng: [47.624318, -122.351487], zoom: 20},
+                {title: 'Action 5: Vendors', latlng: [47.623977, -122.351523], zoom: 20},
+                {title: 'Action 6: Stage #2 (Presentation)', latlng: [47.623687, -122.351669], zoom: 20},
+                {title: 'Action 7: Vendors', latlng: [47.623977, -122.351523], zoom: 20},
+                {title: 'Action 8: Stage #1 (Presentation)', latlng: [47.623680, -122.351430], zoom: 20},
+                {title: 'Action 9: Vendors', latlng: [47.623977, -122.351523], zoom: 20},
+                {title: 'Action 10: Askatu Bakery (Vendor)', latlng: [47.624201, -122.351261], zoom: 20},
+                {title: 'Action 11: Stage #1 (Presentation)', latlng: [47.623680, -122.351430], zoom: 20},
+                {title: 'Action 12: International Fountain', latlng: [47.622721, -122.351704], zoom: 20},
+                {title: 'Action 13: Essentially Seattle', latlng: [47.621083, -122.349565], zoom: 20},
+                {title: 'Action 14: Vendors', latlng: [47.623977, -122.351523], zoom: 20},
+                {title: 'Action 15: Stage #1 (Presentation)', latlng: [47.623680, -122.351430], zoom: 20},
+                {title: 'Action 16: Vendors', latlng: [47.623977, -122.351523], zoom: 20},
+                {title: 'Action 17: Mercer Street Garage', latlng: [47.624893, -122.350365], zoom: 18}],
+
+                
+                nextText : '->',
+                nextTitle : 'Next',
+                prevText : '<-',
+                prevTitle : 'Previous',
+                showList : true}
+            ).addTo(mymap);
+
+            var geojsonLayer = L.geoJSON(narrative, {style:styleFunction, onEachFeature: happenHover}).addTo(mymap);
+
+            function styleFunction(){return{color: "#C0CA33"};}
+            function newStyle(e){var layer = e.target; layer.setStyle({color:"#8D6E63"});}
+            function oldStyle(e){e.target.setStyle({color:"#C0CA33"});}
+            function happenHover(feature, layer){ 
+                layer.bindPopup(feature.properties.action + '<br>' + feature.properties.info);
+                layer.on('mouseover', function(){layer.openPopup();});
+                layer.on('mouseover', newStyle);
+                layer.on('mouseout', oldStyle);
+                layer.on('mouseout', function(){layer.closePopup();});
+            }
+        </script>
+        <!-- <div id="text" style="width: 39%; height: 400px; margin-left: 61%">
+            <p>
+                This interactive spatial narrative takes you through my experience of the second day
+                of the 2023 Northwest Tea Festival on Sunday, September 24. Key moments
+                are identified as 'actions', and arranged sequentially in the order that they occurred.
+                By clicking on the arrows, or by selecting an action from the drop-down menu, you are able
+                to center the map on individual actions.
+                Descriptions of the action in question can be seen by hovering over each polygon,
+                and some include when the action began (i.e. 10:30am) to maintain a sense of time.
+                These polygons represent the general area in which the action took place.
+                Some actions correspond to the same locations, while others are distinct.
+            </p>
+        </div> -->
+    </div>
+</body>
+</html>
